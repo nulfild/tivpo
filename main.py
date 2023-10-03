@@ -22,9 +22,27 @@ class Game:
     def check_input(self, inputText):
         pass
     def ask_for_input(self):
-        pass
+        input_text = input(self.players[self.currentPlayerIndex] +
+                           ", введите букву или слово целиком: ")
+        while not self.check_input(input_text) or input_text in self.used_letters:
+            input_text = input(self.players[self.currentPlayerIndex] +
+                               ", введите букву или слово целиком: ")
+        return input_text.lower()
     def check_answer(self, guess):
-        pass
+        if len(guess) == 1:
+            right_guess = False
+            self.used_letters.add(guess)
+            for ind in range(len(self.currentWord)):
+                if self.currentWord[ind] == guess:
+                    self.currentWordForAnswer = self.currentWordForAnswer[:ind] + guess + self.currentWordForAnswer[
+                                                                                          ind + 1:]
+                    right_guess = True
+            if not right_guess: self.next_player()   
+        else:
+            if guess == self.currentWord:
+                self.currentWordForAnswer = self.currentWord
+            else:
+                self.kick_player()
     def make_turn(self):
         pass
     def start(self):
