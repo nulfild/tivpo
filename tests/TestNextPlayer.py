@@ -1,6 +1,5 @@
 import unittest
 from main import Game
-# from v1 import Game
 
 class TestNextPlayer(unittest.TestCase):
     def test_next_player_inex_med(self):

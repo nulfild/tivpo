@@ -12,9 +12,22 @@ class Game:
     def __init__(self):
         pass
     def read_words(self, file_path):
-        pass
+        words = []
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                csvreader = csv.reader(file, delimiter='|')
+                for row in csvreader:
+                    words.append(row[0])
+        except FileNotFoundError:
+            print(f"Файл не найден: {file_path}")
+            print("Взяты слова по умолчанию")
+            words = ["вратарь", "черепаха", "бергамот", "баклажан", "колибри", "хибара"]
+        return words
     def next_player(self):
-        pass
+        if self.currentPlayerIndex == len(self.players) - 1:
+            self.currentPlayerIndex = 0
+        else:
+            self.currentPlayerIndex += 1
     def kick_player(self, player_index):
         pass
     def get_random_word(self):
