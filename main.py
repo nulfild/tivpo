@@ -10,7 +10,8 @@ class Game:
     used_letters = set()
 
     def __init__(self):
-        pass
+        self.words = self.read_words('./words.csv')
+
     def read_words(self, file_path):
         words = []
         try:
@@ -24,13 +25,15 @@ class Game:
             words = ["вратарь", "черепаха", "бергамот", "баклажан", "колибри", "хибара"]
         return words
 
-    def kick_player(self, player_index):
+    def kick_player(self):
         print("Покидает игру " + self.players[self.currentPlayerIndex])
         self.players.pop(self.currentPlayerIndex)
         if self.currentPlayerIndex == len(self.players):
             self.currentPlayerIndex = 0
+
     def get_random_word(self):
-        pass
+        return random.choice(self.words)
+
     def check_input(self, inputText):
         return bool(re.search(r'^[а-яА-Я]+$', inputText))
        
@@ -39,6 +42,7 @@ class Game:
             self.currentPlayerIndex = 0
         else:
             self.currentPlayerIndex += 1
+
     def ask_for_input(self):
         input_text = input(self.players[self.currentPlayerIndex] +
                            ", введите букву или слово целиком: ")
@@ -46,6 +50,7 @@ class Game:
             input_text = input(self.players[self.currentPlayerIndex] +
                                ", введите букву или слово целиком: ")
         return input_text.lower()
+
     def check_answer(self, guess):
         if len(guess) == 1:
             right_guess = False
@@ -61,10 +66,28 @@ class Game:
                 self.currentWordForAnswer = self.currentWord
             else:
                 self.kick_player()
+
     def make_turn(self):
-        pass
+        input_text = self.ask_for_input()
+        self.check_answer(input_text)
+
     def start(self):
-        pass
+        n = int(input("Введите количество игроков: "))
+        while n < 1 or n > 5:
+            print("Игроков должно быть от 1 до 5")
+            n = int(input("Введите количество игроков: "))
+        for i in range(n):
+            self.players.append("Player " + str(i + 1))
+        self.currentWord = self.get_random_word()
+        self.currentWordForAnswer = "*" * len(self.currentWord)
+        while self.currentWord != self.currentWordForAnswer and len(self.players) != 0:
+            print("Текущее слово: " + self.currentWordForAnswer)
+            self.make_turn()
+
+        if len(self.players) == 0:
+            print("К сожалению, никто не победил, слово было " + self.currentWord)
+        else:
+            print("И перед нами победитель..." + self.players[self.currentPlayerIndex])
 
 if __name__ == "__main__":
     game = Game()
